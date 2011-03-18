@@ -1,0 +1,15 @@
+h1. Flew Modularity
+
+__Examples of modular Flex__
+
+h2. Environment set-up
+Various environment configurations
+* Flex 4.x
+* mm.cfg
+* Flash Player Trust
+* Simple web server
+
+h2. Example 1: flash.display.Loader
+A basic a example of loading a swf via flash.display.Loader
+
+h2. 
