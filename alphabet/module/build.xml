@@ -2,7 +2,7 @@
 <project name="ex1" basedir="." default="build">
 
   <property name="environment" value="env" />
-  <property name="FLEX_HOME" value="/Users/sean/Development/kits/flex-home" />  
+  <property name="FLEX_HOME" value="${env.FLEX_HOME}" />  
   <property name="src.dir" value="${basedir}/src" />
   <property name="build.dir" value="${basedir}/build" />
   <property name="main" value="Ex1.as" />
