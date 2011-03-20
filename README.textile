@@ -1,4 +1,4 @@
-h1. Flew Modularity
+h1. Flex Modularity
 
 __Examples of modular Flex__
 
