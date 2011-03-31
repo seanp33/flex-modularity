@@ -9,41 +9,19 @@
    <s:VerticalLayout/> 
   </s:layout>
 
-  <fx:Style>
-     @namespace s "library://ns.adobe.com/flex/spark";
-
-     @font-face {
-        src:url("../../../assets/BEBAS.TTF");
-        fontFamily: myFontFamily;
-        embedAsCFF: true;
-     }
-     
-     .letter{
-       fontFamily: myFontFamily;
-       fontSize:100;
-     }     
-  </fx:Style>
-
   <fx:Script>
 
     import mx.core.FlexGlobals;
     import mx.events.FlexEvent;
-    import sean.Woobie; Woobie;
 
     [Bindable]
     private var letter:String = "?";
 
     private function preinit(event:FlexEvent):void{
-	/*
-    	var w:Woobie = new Woobie();
     	var theLetter:String = FlexGlobals.topLevelApplication.parameters.letter;
   	if(theLetter){
     		letter = theLetter;
     	};
-
-    	mx.controls.Alert.show("Sub App here");
-
-    */
     }
 
   </fx:Script>

@@ -1,0 +1,43 @@
+<--
+	A script to gather all as3 src as found within flex-sdk and place under common src and asset directories. Handy for linking ide to a single src tree. place in root of project as found at http://opensource.adobe.com/svn/opensource/flex/sdk/trunk etc. and execute ant -f side-project-assembler.xml
+-->
+<project name="side-project-assembler" default="gather-src" basedir=".">
+    <target name="gather-src">
+        <mkdir dir="side-project/src"/>		
+		<copy todir="side-project/src" overwrite="true">
+			<fileset dir="${basedir}/frameworks/projects/framework/src"/>
+			<fileset dir="${basedir}/frameworks/projects/mx/src"/>
+			<fileset dir="${basedir}/frameworks/projects/rpc/src"/>
+			<fileset dir="${basedir}/frameworks/projects/datavisualization/src"/>
+			<fileset dir="${basedir}/frameworks/projects/spark/src"/>
+			<fileset dir="${basedir}/frameworks/projects/sparkskins/src"/>
+			<fileset dir="${basedir}/frameworks/projects/spark_dmv/src"/>
+			<fileset dir="${basedir}/frameworks/projects/airframework/src"/>
+			<fileset dir="${basedir}/frameworks/projects/airspark/src"/>
+			<fileset dir="${basedir}/frameworks/projects/mobilecomponents/src"/>
+			<fileset dir="${basedir}/frameworks/projects/mobiletheme/src"/>
+			<fileset dir="${basedir}/frameworks/projects/flex/src"/>
+			<fileset dir="${basedir}/frameworks/projects/flash-integration/src"/>
+			<fileset dir="${basedir}/frameworks/projects/utilities/src"/>
+			<fileset dir="${basedir}/frameworks/projects/osmf/src"/>
+			<fileset dir="${basedir}/frameworks/projects/wireframe/src"/>
+			<fileset dir="${basedir}/frameworks/projects/automation/src"/>
+			<fileset dir="${basedir}/frameworks/projects/automation_dmv/src"/>
+			<fileset dir="${basedir}/frameworks/projects/automation_spark/src"/>
+			<fileset dir="${basedir}/frameworks/projects/automation_air/src"/>
+			<fileset dir="${basedir}/frameworks/projects/automation_airspark/src"/>
+			<fileset dir="${basedir}/frameworks/projects/automation_flashflexkit/src"/>
+		</copy>
+
+		<mkdir dir="side-project/assets"/>		
+		<copy todir="side-project/assets" overwrite="true">
+			<fileset dir="${basedir}/frameworks/projects/framework/assets"/>
+			<fileset dir="${basedir}/frameworks/projects/spark/assets"/>
+			<fileset dir="${basedir}/frameworks/projects/sparkskins/assets"/>
+			<fileset dir="${basedir}/frameworks/projects/airframework/assets"/>
+			<fileset dir="${basedir}/frameworks/projects/airspark/assets"/>
+			<fileset dir="${basedir}/frameworks/projects/wireframe/assets"/>
+		</copy>
+    </target>
+
+</project>
