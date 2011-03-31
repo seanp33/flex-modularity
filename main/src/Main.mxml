@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="cc(event);">
+
+    <mx:Script><![CDATA[
+        import mx.controls.SWFLoader;
+        import mx.events.FlexEvent;
+
+        private static const SUB_APP_URL:String = "http://localhost:8080/modflex/SubApp.swf";
+
+        private var loader:SWFLoader;
+
+        private function cc(event:FlexEvent):void {
+            loader = new SWFLoader();
+            // not necessary - from same domain
+            //loader.trustContent = true;
+            updateListeners(loader.addEventListener);
+            loader.load(SUB_APP_URL);
+        }
+
+        private function updateListeners(op:Function):void {
+            op(Event.COMPLETE, handleComplete);
+            op(HTTPStatusEvent.HTTP_STATUS, handleHttpStatus);
+            op(Event.INIT, handleInit);
+            op(IOErrorEvent.IO_ERROR, handleIOErrorEvent);
+            op(Event.OPEN, handleOpen);
+            op(ProgressEvent.PROGRESS, handleProgress);
+            op(SecurityErrorEvent.SECURITY_ERROR, handleSecurityErrorEvent);
+        }
+
+        private function handleComplete(event:Event):void {
+            var subapp:DisplayObject = event.target as DisplayObject;
+            foo.addChild(subapp);
+            subapp.x = 20;
+            subapp.y = 20;
+        }
+
+        private function handleHttpStatus(event:HTTPStatusEvent):void {
+            trace("handleHttpStatus");
+        }
+
+        private function handleInit(event:Event):void {
+            classLoad(event);
+        }
+
+        private function handleIOErrorEvent(event:IOErrorEvent):void {
+            trace("handleIOErrorEvent");
+        }
+
+        private function handleOpen(event:Event):void {
+            trace("handleOpen");
+        }
+
+        private function handleProgress(event:ProgressEvent):void {
+            trace("handleProgress");
+        }
+
+        private function handleSecurityErrorEvent(event:SecurityErrorEvent):void {
+            trace("handleSecurityErrorEvent");
+        }
+
+        private function classLoad(event:Event):void{
+            var loadedAppDomain:ApplicationDomain = loader.loaderContext.applicationDomain; 
+            if(loadedAppDomain.hasDefinition("sean.Woobie")){
+                var woobieClass:Class = loadedAppDomain.getDefinition("sean.Woobie") as Class;
+                var w:Object = new woobieClass();
+            }
+        }
+        ]]></mx:Script>
+
+    <mx:HBox id="foo" width="50%" height="50%">
+        <mx:Button label="try to class load sean.Woobie" click="classLoad(event)" />
+    </mx:HBox>
+</mx:Application>

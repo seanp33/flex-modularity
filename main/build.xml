@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project name="ex1" basedir="." default="build">
+
+  <property name="environment" value="env" />
+  <property name="FLEX_HOME" value="/Users/sean/Development/kits/flex-home" />  
+  <property name="src.dir" value="${basedir}/src" />
+  <property name="build.dir" value="${basedir}/build" />
+  <property name="main" value="Main.mxml" />
+  <property name="swf" value="Main.swf" />
+
+  <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" /> 
+
+  <target name="clean">
+    <delete dir="${build.dir}" />
+  </target>
+
+  <target name="build">
+     <mxmlc file="${src.dir}/${main}" keep-generated-actionscript="true" output="${build.dir}/${swf}"> 
+        <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/> 
+        <source-path path-element="${FLEX_HOME}/frameworks"/> 
+    </mxmlc> 
+  </target>
+
+</project>
