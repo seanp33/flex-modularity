@@ -8,52 +8,36 @@
         import mx.core.UIComponent;
         import mx.events.FlexEvent;
 
-        private static const SUB_APP_URL:String = "http://localhost:8080/modflex/SubApp.swf";
+        private static const SUB_APP_URL:String = "http://localhost:8080/modflex/";
         private var loadQueue:Array = [];
-
-        [Bindable]
-        private var alphabet:ArrayCollection = new ArrayCollection();
+        private var swfQueue:Array = [];
 
         private function cc(event:FlexEvent):void {
             loadAlphabet();
         }
 
         private function loadAlphabet():void {
-            for (var i:int = 123; i >= 97; i--) {
+            for (var i:int = 65; i <= 90; i++) {
                 var loader:SWFLoader = new SWFLoader();
-                loader.trustContent = true;
-                loader.source = SUB_APP_URL;
-                loadQueue.push({loader:loader,letter:String.fromCharCode(i)});
-                updateListeners(loader.addEventListener);
+                loader.source = SUB_APP_URL + String.fromCharCode(i) + ".swf";
+                loader.addEventListener(Event.COMPLETE, handleComplete);
+                loadQueue.push(loader);
             }
-
             loadNext();
         }
 
         private function loadNext():void {
-            if (loadQueue.length) {
-                loadQueue[0].loader.load();
+            if (loadQueue.length > 0) {
+                var loader:SWFLoader = loadQueue.shift();
+                loader.load();
             }
         }
 
-        private function updateListeners(op:Function):void {
-            op(Event.COMPLETE, handleComplete);
-            op(HTTPStatusEvent.HTTP_STATUS, handleHttpStatus);
-            op(Event.INIT, handleInit);
-            op(IOErrorEvent.IO_ERROR, handleIOErrorEvent);
-            op(Event.OPEN, handleOpen);
-            op(ProgressEvent.PROGRESS, handleProgress);
-            op(SecurityErrorEvent.SECURITY_ERROR, handleSecurityErrorEvent);
-        }
-
         private function handleComplete(event:Event):void {
-            var o:Object = loadQueue.pop();
-            var loader:SWFLoader = o.loader;
-            updateListeners(loader.removeEventListener);
-            var letter:String = o.letter;
-            var swf:DisplayObject = event.target as DisplayObject;
-            addChild(swf);
-            loadNext();
+            var loader:SWFLoader = event.target as SWFLoader;
+            tile.addChild(event.target as DisplayObject);
+            //setTimeout(loadNext, 2000);
+            callLater(loadNext);
         }
 
         private function handleHttpStatus(event:HTTPStatusEvent):void {
@@ -91,6 +75,10 @@
         }
         ]]></mx:Script>
 
-    <mx:Tile id="tile"></mx:Tile>
+    <mx:Tile id="tile" direction="horizontal" borderStyle="inset"
+             horizontalGap="10" verticalGap="15"
+             paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+    </mx:Tile>
+
 
 </mx:Application>
