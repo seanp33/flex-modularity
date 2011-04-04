@@ -2,19 +2,38 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="cc(event);">
 
     <mx:Script><![CDATA[
+        import mx.collections.ArrayCollection;
+        import mx.collections.ListCollectionView;
         import mx.controls.SWFLoader;
+        import mx.core.UIComponent;
         import mx.events.FlexEvent;
 
         private static const SUB_APP_URL:String = "http://localhost:8080/modflex/SubApp.swf";
+        private var loadQueue:Array = [];
 
-        private var loader:SWFLoader;
+        [Bindable]
+        private var alphabet:ArrayCollection = new ArrayCollection();
 
         private function cc(event:FlexEvent):void {
-            loader = new SWFLoader();
-            // not necessary - from same domain
-            //loader.trustContent = true;
-            updateListeners(loader.addEventListener);
-            loader.load(SUB_APP_URL);
+            loadAlphabet();
+        }
+
+        private function loadAlphabet():void {
+            for (var i:int = 123; i >= 97; i--) {
+                var loader:SWFLoader = new SWFLoader();
+                loader.trustContent = true;
+                loader.source = SUB_APP_URL;
+                loadQueue.push({loader:loader,letter:String.fromCharCode(i)});
+                updateListeners(loader.addEventListener);
+            }
+
+            loadNext();
+        }
+
+        private function loadNext():void {
+            if (loadQueue.length) {
+                loadQueue[0].loader.load();
+            }
         }
 
         private function updateListeners(op:Function):void {
@@ -28,10 +47,13 @@
         }
 
         private function handleComplete(event:Event):void {
-            var subapp:DisplayObject = event.target as DisplayObject;
-            foo.addChild(subapp);
-            subapp.x = 20;
-            subapp.y = 20;
+            var o:Object = loadQueue.pop();
+            var loader:SWFLoader = o.loader;
+            updateListeners(loader.removeEventListener);
+            var letter:String = o.letter;
+            var swf:DisplayObject = event.target as DisplayObject;
+            addChild(swf);
+            loadNext();
         }
 
         private function handleHttpStatus(event:HTTPStatusEvent):void {
@@ -58,16 +80,17 @@
             trace("handleSecurityErrorEvent");
         }
 
-        private function classLoad(event:Event):void{
-            var loadedAppDomain:ApplicationDomain = loader.loaderContext.applicationDomain; 
-            if(loadedAppDomain.hasDefinition("sean.Woobie")){
-                var woobieClass:Class = loadedAppDomain.getDefinition("sean.Woobie") as Class;
-                var w:Object = new woobieClass();
-            }
+        private function classLoad(event:Event):void {
+            /*
+             var loadedAppDomain:ApplicationDomain = loader.loaderContext.applicationDomain;
+             if (loadedAppDomain.hasDefinition("sean.Woobie")) {
+             var woobieClass:Class = loadedAppDomain.getDefinition("sean.Woobie") as Class;
+             var w:Object = new woobieClass();
+             }
+             */
         }
         ]]></mx:Script>
 
-    <mx:HBox id="foo" width="50%" height="50%">
-        <mx:Button label="try to class load sean.Woobie" click="classLoad(event)" />
-    </mx:HBox>
+    <mx:Tile id="tile"></mx:Tile>
+
 </mx:Application>

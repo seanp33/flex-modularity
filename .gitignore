@@ -16,3 +16,4 @@ MANIFEST.MF
 *.ipr
 generated
 \#
+*temp_flex*.xml
