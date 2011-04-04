@@ -2,15 +2,11 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="cc(event);">
 
     <mx:Script><![CDATA[
-        import mx.collections.ArrayCollection;
-        import mx.collections.ListCollectionView;
         import mx.controls.SWFLoader;
-        import mx.core.UIComponent;
         import mx.events.FlexEvent;
 
         private static const SUB_APP_URL:String = "http://localhost:8080/modflex/";
         private var loadQueue:Array = [];
-        private var swfQueue:Array = [];
 
         private function cc(event:FlexEvent):void {
             loadAlphabet();
@@ -36,7 +32,6 @@
         private function handleComplete(event:Event):void {
             var loader:SWFLoader = event.target as SWFLoader;
             tile.addChild(event.target as DisplayObject);
-            //setTimeout(loadNext, 2000);
             callLater(loadNext);
         }
 
