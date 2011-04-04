@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<project name="module" basedir="." default="build">
+<project name="subapp" basedir="." default="build">
 
   <property name="environment" value="env" />
   <property name="FLEX_HOME" value="/Users/sean/Development/kits/flex-home" />  
   <property name="src.dir" value="${basedir}/src" />
   <property name="build.dir" value="${basedir}/build" />
-  <property name="main" value="Module.mxml" />
-  <property name="swf" value="Module.swf" />
+  <property name="main" value="SubApp.mxml" />
+  <property name="swf" value="SubApp.swf" />
 
   <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" /> 
 

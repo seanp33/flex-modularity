@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml">
+    <mx:VBox>
+        <mx:Label id="letter" fontSize="100" text="Z"/>
+    </mx:VBox>
+</mx:Application>
