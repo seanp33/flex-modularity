@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml">
+    <mx:Script><![CDATA[
+        import mx.controls.Label;
+        import mx.controls.SWFLoader;
+        import mx.managers.SystemManager;
+
+        // The url of the sub-application to load
+        private const SUBAPP_URL:String = "TheLoaded.swf";
+
+        // The SWFLoader user to load "./TheLoaded.swf"
+        private var ldr:SWFLoader = new SWFLoader();
+
+        /**
+         * Handles click event of loadSubAppBtn by loading the sub-application
+         * @param event
+         */
+        private function loadSubApplication(event:MouseEvent):void {
+
+            // A. add a handler for the COMPLETE event
+            ldr.addEventListener(Event.COMPLETE, function(event:Event):void {
+                vbox.addChild(event.target as DisplayObject);
+            });
+
+            // B. add a handler for bubbling event "THE_LOADED" dispatched from sub-application
+            // and adds a label to demonstrate
+            ldr.addEventListener("THE_LOADED", function(event:Event):void {
+                var lbl:Label = new Label();
+                lbl.text = "The sub-application has been clicked";
+                vbox.addChild(lbl);
+            })
+
+            // C. And load
+            ldr.load(SUBAPP_URL);
+        }
+
+        /**
+         * Handles click event of callSubAppFunctionBtn accessing the sub-application as a Application (via its
+         * SystemManager) and invoking a function by name.
+         * @param event
+         */
+        private function callSubAppfunction(event:MouseEvent):void {
+            // D. SWFLoader.content is the actually object loaded by the SWFLoader - it is the SWFLoader's sole child.
+            // In order to target the members (like the setLabel function) of the subapp, it must be accessed via its
+            // SystemManager.
+            var subApp:Object = (ldr.content as SystemManager).application as Object;
+
+            // Call a method and access a property of the sub-application
+            subApp.setLabel("Host Calls SubApp");
+        }
+        ]]></mx:Script>
+
+    <mx:HBox>
+        <mx:Button id="loadSubAppBtn" label="Load It >> " click="loadSubApplication(event)"/>
+        <mx:Button id="callSubAppFunctionBtn" label="Call a function of the Subapp >> "
+                   click="callSubAppfunction(event)"/>
+    </mx:HBox>
+    <mx:VBox id="vbox"></mx:VBox>
+</mx:Application>

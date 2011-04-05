@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" borderStyle="solid">
+    <mx:Script><![CDATA[
+
+        /**
+         * Handles the click event of the label by dispatching a bubbling event,
+         * intended to be handled by the loading application
+         * @param msg
+         */
+        private function handleLblClick(event:MouseEvent):void {
+            // A. dispatches a *bubbling event: bubbling allows the event to transvers the display list
+            // and be handled by the loading application
+            dispatchEvent(new Event("THE_LOADED", true));
+        }
+
+        /**
+         * Public function exposed to the loading application
+         * @param msg
+         */
+        public function setLabel(msg:String):void {
+            // B. Sets the label's text to demonstrate
+            lbl.text = msg;
+        }
+
+        ]]></mx:Script>
+    <mx:Label id="lbl" text="I am the Sub-Application" fontSize="300" click="handleLblClick(event)"/>
+</mx:Application>
