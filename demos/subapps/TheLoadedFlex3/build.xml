@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project name="TheLoadedFlex3" basedir="." default="build">
+
+  <property name="environment" value="env" />
+  <property name="FLEX_HOME" value="/Users/sean/Development/kits/flex_sdk_3.5.0.12683" />  
+  <property name="src.dir" value="${basedir}/src" />
+  <property name="build.dir" value="${basedir}/build" />
+  <property name="main" value="TheLoadedFlex3.mxml" />
+  <property name="swf" value="TheLoadedFlex3.swf" />
+
+  <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" /> 
+
+  <target name="clean">
+    <delete dir="${build.dir}" />
+  </target>
+
+  <target name="build">
+     <mxmlc file="${src.dir}/${main}" debug="true" keep-generated-actionscript="true" output="${build.dir}/${swf}"> 
+        <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/> 
+        <source-path path-element="${FLEX_HOME}/frameworks"/> 
+    </mxmlc> 
+  </target>
+
+</project>
