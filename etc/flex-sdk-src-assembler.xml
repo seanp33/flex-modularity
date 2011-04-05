@@ -1,9 +1,9 @@
 <--
-	A script to gather all as3 src as found within flex-sdk and place under common src and asset directories. Handy for linking ide to a single src tree. place in root of project as found at http://opensource.adobe.com/svn/opensource/flex/sdk/trunk etc. and execute ant -f side-project-assembler.xml
+	A script to gather all as3 src as found within flex-sdk and place under common src and asset directories. Handy for linking ide to a single src tree. place in root of project as found at http://opensource.adobe.com/svn/opensource/flex/sdk/trunk etc. and execute ant -f flex-sdk-src-assembler.xml
 -->
-<project name="side-project-assembler" default="gather-src" basedir=".">
+<project name="flex-sdk-src-assembler" default="gather-src" basedir=".">
     <target name="gather-src">
-        <mkdir dir="side-project/src"/>		
+        <mkdir dir="assembled-src/src"/>		
 		<copy todir="side-project/src" overwrite="true">
 			<fileset dir="${basedir}/frameworks/projects/framework/src"/>
 			<fileset dir="${basedir}/frameworks/projects/mx/src"/>
