@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<project name="AnAngryModule" basedir="." default="build">
+
+    <property name="FLEX_HOME" value="/Users/sean/Development/kits/flex-home"/>
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="main" value="org/AnAngryModule.mxml"/>
+    <property name="swf" value="AnAngryModule.swf"/>
+    <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="build">
+        <mxmlc file="${src.dir}/${main}" debug="true" keep-generated-actionscript="true" output="${build.dir}/${swf}">
+            <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+            <source-path path-element="${FLEX_HOME}/frameworks"/>
+            <source-path path-element="${src.dir}"/>
+            <library-path dir="/Users/sean/Development/projects/flex-modularity/demos/swcs/ANuttySwc" append="true">
+                <include name="build"/>
+            </library-path>
+        </mxmlc>
+    </target>
+
+</project>

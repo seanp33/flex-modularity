@@ -4,9 +4,17 @@
     <mx:Script><![CDATA[
         import mx.controls.Label;
         import mx.controls.SWFLoader;
+        import mx.events.ColorPickerEvent;
         import mx.managers.SystemManager;
 
-        // The url of the sub-application to load
+        // We need to explicitly link in the MarshallingSupport [Mixin] class
+        // to allow the sub application's PopUpManager to marshall events between communicate with
+        // the main application's PopUpManager.
+        // NOTE: that this can also be accomplished via the -include mxmlc/compc argument
+        // NOTE: MarshallingSupport's behavior was provided by default in Flex 3.x
+        import mx.managers.systemClasses.MarshallingSupport;MarshallingSupport;
+
+        // The **relative** url of the sub-application to load
         private const SUBAPP_URL:String = "TheLoaded.swf";
 
         // The SWFLoader user to load "./TheLoaded.swf"
@@ -21,17 +29,31 @@
             // A. add a handler for the COMPLETE event
             ldr.addEventListener(Event.COMPLETE, function(event:Event):void {
                 vbox.addChild(event.target as DisplayObject);
+
+                ldr.content.loaderInfo.sharedEvents.addEventListener("THE_LOADED_SHARED_EVENT", function(event:Event):void {
+                    var lbl:Label = new Label();
+                    lbl.text = "Recieved a shared event named " + event.type + " from the The Loaded";
+                    vbox.addChild(lbl);
+                });
             });
 
             // B. add a handler for bubbling event "THE_LOADED" dispatched from sub-application
-            // and adds a label to demonstrate
-            ldr.addEventListener("THE_LOADED", function(event:Event):void {
+            // and adds a label to demonstrate.
+
+            // NOTE: That if the loaded swf originated from a different domain
+            // i.e http://acme.com/TheLoaded.swf, it would reside in its own Security Domain.
+            // As a result we would NOT be able to receive any events, bubbling or not, by default.
+            // In order to override this behavior the loader and the loaded can employee
+            // Security.allowDomain(...), there by stating their *complete trust in each other
+            // and exposing one another for x-scripting. Consider using "Shared Events" for
+            // a less permissive approach.
+            ldr.addEventListener("THE_LOADED_BUBBLING_EVENT", function(event:Event):void {
                 var lbl:Label = new Label();
                 lbl.text = "The sub-application has been clicked";
                 vbox.addChild(lbl);
             })
 
-            // C. And load
+            // C. And load the swf. This will load the swf into the default child Application Domain.
             ldr.load(SUBAPP_URL);
         }
 
@@ -40,7 +62,8 @@
          * SystemManager) and invoking a function by name.
          * @param event
          */
-        private function callSubAppfunction(event:MouseEvent):void {
+        private function callSubAppFunction(event:MouseEvent):void {
+
             // D. SWFLoader.content is the actually object loaded by the SWFLoader - it is the SWFLoader's sole child.
             // In order to target the members (like the setLabel function) of the subapp, it must be accessed via its
             // SystemManager.
@@ -49,12 +72,35 @@
             // Call a method and access a property of the sub-application
             subApp.setLabel("Host Calls SubApp");
         }
+
+        private function dispatchSharedEvent(event:MouseEvent):void {
+            ldr.content.loaderInfo.sharedEvents.dispatchEvent(new Event("THE_LOADER_SHARED_EVENT"));
+        }
+
+        /**
+         * Event handler for color picker which responds by obtaining a reference to the
+         * sub application via SWFLoader.content and then directly setting its backgroundColor
+         * NOTE: This kind of x-scripting is possible because both TheLoader and TheLoaded
+         * originated from the same domain. Otherwise, TheLoaded would need to utilize
+         * Security.allowDomain(<TheLoader's domain>), or communication would need to
+         * occur via the shared event mechanism.
+         * @param event
+         */
+        private function onColorPicked(event:ColorPickerEvent):void {
+            var subApp:Application = (ldr.content as SystemManager).application as Application;
+            subApp.setStyle("backgroundColor", event.color);
+        }
         ]]></mx:Script>
 
     <mx:HBox>
         <mx:Button id="loadSubAppBtn" label="Load It >> " click="loadSubApplication(event)"/>
         <mx:Button id="callSubAppFunctionBtn" label="Call a function of the Subapp >> "
-                   click="callSubAppfunction(event)"/>
+                   click="callSubAppFunction(event)"/>
+        <mx:Button id="dispatchSharedEventBtn" label="Dispatch a Shared Event to the SubApp >> "
+                   click="dispatchSharedEvent(event)"/>
+        <mx:Spacer width="20"/>
+        <mx:Label id="colorPickerLbl" text="Change Color of The Loaded"></mx:Label>
+        <mx:ColorPicker id="colorPicker" change="onColorPicked(event)"></mx:ColorPicker>
     </mx:HBox>
     <mx:VBox id="vbox"></mx:VBox>
 </mx:Application>

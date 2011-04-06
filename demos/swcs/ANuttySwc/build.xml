@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<project name="ANuttySwc" basedir="." default="build">
+
+  <property name="FLEX_HOME" value="/Users/sean/Development/kits/flex-home" />
+  <property name="src.dir" value="${basedir}/src" />
+  <property name="build.dir" value="${basedir}/build" />
+  <property name="swc" value="ANuttySwc.swc" />
+  <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+  <target name="clean">
+    <delete dir="${build.dir}" />
+  </target>
+
+  <target name="build">
+     <compc include-classes="NuttyClasses" debug="true" keep-generated-actionscript="true" output="${build.dir}/${swc}">         
+        <source-path path-element="${FLEX_HOME}/frameworks"/>
+        <source-path path-element="${src.dir}"/>
+    </compc> 
+  </target>
+
+</project>

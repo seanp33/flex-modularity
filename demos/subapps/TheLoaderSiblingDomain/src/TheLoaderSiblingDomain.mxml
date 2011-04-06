@@ -4,18 +4,21 @@
     <mx:Script><![CDATA[
         import mx.controls.Label;
         import mx.controls.SWFLoader;
-        import mx.managers.SystemManager;
+        import mx.events.ColorPickerEvent;
 
-        // The url of the sub-application to load - compiled with Flex 3.5.x
+        // We need to explicitly link in the MarshallingSupport [Mixin] class
+        // to allow the sub application's PopUpManager to marshall events between communicate with
+        // the main application's PopUpManager.
+        // NOTE: that this can also be accomplished via the -include mxmlc/compc argument
+        // NOTE: MarshallingSupport's behavior was provided by default in Flex 3.x
+        //import mx.managers.systemClasses.MarshallingSupport;MarshallingSupport;
+
+        // The **relative** url of the sub-application to load
         private const SUBAPP_URL:String = "TheLoadedFlex3.swf";
 
-        // The SWFLoader user to load "./TheLoadedFlex3.swf"
+        // The SWFLoader user to load "./TheLoaded.swf"
         private var ldr:SWFLoader = new SWFLoader();
 
-        /**
-         * Handles click event of loadSubAppBtn by loading the sub-application
-         * @param event
-         */
         private function loadSubApplication(event:MouseEvent):void {
 
             // A. add a handler for the COMPLETE event
@@ -23,54 +26,23 @@
                 vbox.addChild(event.target as DisplayObject);
             });
 
-            // B. add a handler for bubbling event "THE_LOADED" dispatched from sub-application
-            // and adds a label to demonstrate
-            ldr.addEventListener("THE_LOADED", function(event:Event):void {
-                var lbl:Label = new Label();
-                lbl.text = "The sub-application has been clicked";
-                vbox.addChild(lbl);
-            })
-
-            // C. And load into a sibling domain, rather that the default child
-
-            // D. Loading can be instructed to utilize a sibling application domain via the
+            // B. Loading can be instructed to utilize a sibling application domain via the
             // loadForCompatibility flag or or explicitly setting the loader's LoaderContext
 
             // via loadForCompatibility
             ldr.loadForCompatibility = true;
 
-            // or LoaderContext
+            // or by specifying a LoaderContext
             // var loaderContext:LoaderContext = new LoaderContext();
             // loaderContext.applicationDomain = new ApplicationDomain();
             // ldr.loaderContext = loaderContext;
-
             ldr.load(SUBAPP_URL);
         }
 
-        /**
-         * Handles click event of callSubAppFunctionBtn accessing the sub-application as a Application (via its
-         * SystemManager) and invoking a function by name.
-         * @param event
-         */
-        private function callSubAppfunction(event:MouseEvent):void {
-            // D. SWFLoader.content is the actually object loaded by the SWFLoader - it is the SWFLoader's sole child.
-            // In order to target the members (like the setLabel function) of the subapp, it must be accessed via its
-            // SystemManager.
-            // TODO: figure how to call methods on a mult-versioned subapplication
-            var sysManager:SystemManager = ldr.content as SystemManager;
-            var subApp:Object = sysManager.application as Object;
-
-            // Call a method and access a property of the sub-application
-            if(subApp.hasOwnProperty("setLabel")){
-                subApp.setLabel("Host Calls SubApp");
-            }
-        }
         ]]></mx:Script>
 
     <mx:HBox>
         <mx:Button id="loadSubAppBtn" label="Load It >> " click="loadSubApplication(event)"/>
-        <mx:Button id="callSubAppFunctionBtn" label="Call a function of the Subapp >> "
-                   click="callSubAppfunction(event)"/>
     </mx:HBox>
     <mx:VBox id="vbox"></mx:VBox>
 </mx:Application>
