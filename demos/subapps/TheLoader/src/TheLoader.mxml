@@ -54,6 +54,7 @@
             })
 
             // C. And load the swf. This will load the swf into the default child Application Domain.
+            // and Security.currentDomain
             ldr.load(SUBAPP_URL);
         }
 
